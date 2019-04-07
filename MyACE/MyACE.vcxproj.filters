@@ -35,5 +35,11 @@
     <ClInclude Include="simpleClient.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="reactorClient1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="reactorSrv1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

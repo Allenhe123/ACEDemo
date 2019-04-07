@@ -1,4 +1,4 @@
-#define ACE_NTRACE 1  // 若为0则开启ACE_TRACE功能
+#define ACE_NTRACE 0  // 若为0则开启ACE_TRACE功能
 #include "ace/Init_ACE.h"
 #include "ace/Service_Config.h"
 
@@ -6,6 +6,8 @@
 #include "getopt.h"
 #include "simpleClient.h"
 #include "simpleSrv.h"
+#include "reactorSrv1.h"
+#include "reactorClient1.h"
 
 
 //int ACE_MAIN(int, ACE_TCHAR* [])
@@ -30,7 +32,10 @@ int main(int argc, char* argv[])
 	//testOpt();
 
 	//startup_client();
-	startup_srv();
+	//startup_srv();
+
+	startup_reactor1_srv();
+
 
 
 	ACE::fini();

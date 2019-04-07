@@ -5,6 +5,7 @@
 #include "ace/SOCK_Acceptor.h"
 #include "ace/Log_Msg.h"
 #include "ace/Time_Value.h"
+#include "ace/OS.h"
 
 int startup_srv()
 {
@@ -40,6 +41,9 @@ int startup_srv()
 				ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) recv: %s\n"), buffer));
 				peer.send_n(buffer, byte_recv);
 			}
+
+			ACE_OS::sleep(5);  // sleep 5 seconds manually
+
 			peer.close();
 		}
 	}
