@@ -8,8 +8,8 @@
 #include "ace/Message_Queue.h"
 #include "ace/SOCK_Stream.h"
 #include "ace/Null_Condition.h"
-#include "ace/Auto_Ptr.h"
-#include <memory>
+#include "ace/OS.h"
+//#include "ace/Auto_Ptr.h"
 
 class ClientService : public ACE_Event_Handler
 {
@@ -36,6 +36,8 @@ public:
 			ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) connection closed\n")));
 			return -1;
 		}
+
+		ACE_OS::sleep(10);  /// just for test, sleep manually
 
 		send_cnt = sock_.send(buffer, static_cast<size_t>(recv_cnt));
 		// return 0 and waitting for more input data
@@ -128,12 +130,13 @@ public:
 	{
 		ClientService* client;
 		ACE_NEW_RETURN(client, ClientService, -1);
-		auto_ptr<ClientService> p(client);
+		//auto_ptr<ClientService> p(client);
 		ACE_Time_Value timeout(10, 0);
 		if (this->acceptor_.accept(client->peer(), 0, &timeout, 0) == -1)
 		{
 			ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), ACE_TEXT("failed to accept client connection.")), -1);
-			p.release();
+			delete client;
+			//p.release();
 		}
 		client->reactor(this->reactor());
 		if (client->open() == -1)

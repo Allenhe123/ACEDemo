@@ -1,4 +1,4 @@
-#define ACE_NTRACE 0  // 若为0则开启ACE_TRACE功能
+#define ACE_NTRACE 1  // 若为0则开启ACE_TRACE功能
 #include "ace/Init_ACE.h"
 #include "ace/Service_Config.h"
 
