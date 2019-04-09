@@ -41,5 +41,14 @@
     <ClInclude Include="reactorSrv1.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="reactorSig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="reactorTimer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="acceptor_connect_framework.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -136,10 +136,13 @@
     <ClCompile Include="log.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="acceptor_connect_framework.h" />
     <ClInclude Include="getopt.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="reactorClient1.h" />
+    <ClInclude Include="reactorSig.h" />
     <ClInclude Include="reactorSrv1.h" />
+    <ClInclude Include="reactorTimer.h" />
     <ClInclude Include="simpleClient.h" />
     <ClInclude Include="simpleSrv.h" />
   </ItemGroup>
