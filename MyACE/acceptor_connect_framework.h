@@ -20,9 +20,9 @@ public:
 /// ACE_Acceptor or ACE_Connector, which passes "this" in as the
 /// parameter to open.  If this method returns -1 the Svc_Handler's
 /// close() method is automatically called.
-	virtual int open(void* acceptor_or_connector = 0)
+	virtual int open(void* acceptor = 0)
 	{
-		if (super::open(acceptor_or_connector) == -1) return -1;
+		if (super::open(acceptor) == -1) return -1;
 
 		ACE_TCHAR peer_name[MAXPATHLEN];
 		ACE_INET_Addr peer_addr;
@@ -41,8 +41,10 @@ public:
 			ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) connection closed\n")));
 			return -1;
 		}
+		else
+			ACE_DEBUG((LM_DEBUG, ACE_TEXT("recv:%s\n"), buffer));
 
-		ACE_OS::sleep(10);  /// just for test, sleep manually
+		//ACE_OS::sleep(5);  /// just for test, sleep manually
 
 		send_cnt = this->peer().send(buffer, static_cast<size_t>(recv_cnt));
 		// return 0 and waitting for more input data
@@ -131,10 +133,10 @@ public:
 		ssize_t recv_cnt = this->peer().recv(buf, sizeof(buf) - 1);
 		if (recv_cnt > 0)
 		{
-			ACE_DEBUG((LM_DEBUG, ACE_TEXT("%*C"), static_cast<size_t>(recv_cnt), buf));
+			ACE_DEBUG((LM_DEBUG, ACE_TEXT("client recv:%d, %s\n"), static_cast<size_t>(recv_cnt), buf));
 			return 0;
 		}
-		if (recv_cnt == 0 || ACE_OS::last_error() != EWOULDBLOCK)
+		if (recv_cnt <= 0 || ACE_OS::last_error() != EWOULDBLOCK)
 		{
 			this->reactor()->end_reactor_event_loop();
 			return -1;
@@ -148,11 +150,18 @@ public:
 		ACE_Time_Value nowait(ACE_OS::gettimeofday());
 		while (-1 != this->getq(mb, &nowait))
 		{
+			ACE_DEBUG((LM_DEBUG, ACE_TEXT("mb size:%d\n"), mb->size()));
+			ACE_DEBUG((LM_DEBUG, ACE_TEXT("mb length:%d\n"), mb->length()));
+
 			ssize_t send_cnt = this->peer().send(mb->rd_ptr(), mb->length());
-			if (send_cnt == -1)
+			//if (send_cnt == -1)
+			if (send_cnt <= 0)
 				ACE_ERROR((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), ACE_TEXT("send")));
 			else
 				mb->rd_ptr(send_cnt);
+
+			ACE_DEBUG((LM_DEBUG, ACE_TEXT("send size:%d\n\n"), send_cnt));
+
 			if (mb->length() > 0)
 			{
 				this->ungetq(mb);
@@ -170,16 +179,21 @@ public:
 
 	virtual int handle_timeout(const ACE_Time_Value& current_time, const void* act = 0)
 	{
-		if (this->iteration_ >= ITERATIONS)
+		if (this->iteration_++ >= ITERATIONS)
 		{
 			this->peer().close_writer();
 			return 0;
 		}
 
 		ACE_Message_Block* mb;
-		char msg[128];
-		ACE_OS::sprintf(msg, "Iteration %d\n", this->iteration_);
-		ACE_NEW_RETURN(mb, ACE_Message_Block(msg), -1);
+		//char msg[128] = {0};
+		// must use ACE's dynamic malloc !!!
+		char* msg = (char*)ACE_Allocator::instance()->malloc(128);
+		memset(msg, 0, 128);
+		ACE_OS::sprintf((char*)msg, "Iteration:%d\n", this->iteration_);
+
+		ACE_NEW_RETURN(mb, ACE_Message_Block(msg, strlen(msg)), -1);
+		mb->wr_ptr(strlen(msg) + 1);
 		this->putq(mb);
 		return 0;
 	}
@@ -198,7 +212,7 @@ private:
 
 int startup_acceptor_framework()
 {
-	ACE_INET_Addr port_to_listen(1002);
+	ACE_INET_Addr port_to_listen(1007);
 	ClientAcceptor1 acceptor;
 	if (acceptor.open(port_to_listen) == -1) return 1;
 	ACE_Reactor::instance()->run_reactor_event_loop();
@@ -207,7 +221,7 @@ int startup_acceptor_framework()
 
 int startup_connector_framework()
 {
-	ACE_INET_Addr port_to_connect(1002);
+	ACE_INET_Addr port_to_connect(1007, ACE_LOCALHOST);
 	ACE_Connector<Client, ACE_SOCK_CONNECTOR> connector;
 	Client client;
 	Client* pc = &client;

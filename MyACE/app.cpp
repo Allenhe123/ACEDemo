@@ -43,7 +43,9 @@ int main(int argc, char* argv[])
 
 	//startup_timer();
 
-	startup_acceptor_framework();
+	startup_connector_framework();
+
+	//startup_acceptor_framework();
 
 
 	ACE::fini();
