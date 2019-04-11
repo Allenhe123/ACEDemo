@@ -139,6 +139,7 @@
     <ClInclude Include="acceptor_connect_framework.h" />
     <ClInclude Include="getopt.h" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="proactor_framework.h" />
     <ClInclude Include="reactorClient1.h" />
     <ClInclude Include="reactorSig.h" />
     <ClInclude Include="reactorSrv1.h" />

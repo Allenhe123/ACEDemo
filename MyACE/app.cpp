@@ -11,6 +11,7 @@
 #include "reactorSig.h"
 #include "reactorTimer.h"
 #include "acceptor_connect_framework.h"
+#include "proactor_framework.h"
 
 
 //int ACE_MAIN(int, ACE_TCHAR* [])
@@ -43,9 +44,13 @@ int main(int argc, char* argv[])
 
 	//startup_timer();
 
-	startup_connector_framework();
+	//startup_connector_framework();
 
 	//startup_acceptor_framework();
+
+	startup_proactor_framework_acceptor();
+
+	//startup_proactor_framework_connector();
 
 
 	ACE::fini();
