@@ -12,6 +12,8 @@
 #include "reactorTimer.h"
 #include "acceptor_connect_framework.h"
 #include "proactor_framework.h"
+#include "udp.h"
+#include "process.h"
 
 
 //int ACE_MAIN(int, ACE_TCHAR* [])
@@ -45,12 +47,18 @@ int main(int argc, char* argv[])
 	//startup_timer();
 
 	//startup_connector_framework();
-
 	//startup_acceptor_framework();
 
-	startup_proactor_framework_acceptor();
-
+	//startup_proactor_framework_acceptor();
 	//startup_proactor_framework_connector();
+
+	//startup_udp_send();
+	//startup_udp_recv();
+
+	//startup_process(argc, argv);
+	//startup_processMgr(argc, argv);
+	startup_processMgr_Reactor(argc, argv);
+
 
 
 	ACE::fini();

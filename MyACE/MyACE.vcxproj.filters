@@ -53,5 +53,11 @@
     <ClInclude Include="proactor_framework.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="udp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="process.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
