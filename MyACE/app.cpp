@@ -14,7 +14,9 @@
 #include "proactor_framework.h"
 #include "udp.h"
 #include "process.h"
-
+#include "aceThread.h"
+#include "aceThreadMgr.h"
+#include "aceThreadSig.h"
 
 //int ACE_MAIN(int, ACE_TCHAR* [])
 int main(int argc, char* argv[])
@@ -57,9 +59,13 @@ int main(int argc, char* argv[])
 
 	//startup_process(argc, argv);
 	//startup_processMgr(argc, argv);
-	startup_processMgr_Reactor(argc, argv);
+	//startup_processMgr_Reactor(argc, argv);
 
+	//startup_thread();
 
+	//startup_thread_mgr();
+
+	startup_thrd_sig();
 
 	ACE::fini();
 

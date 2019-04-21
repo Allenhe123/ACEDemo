@@ -127,12 +127,12 @@ class DeathHandler : public ACE_Event_Handler
 public:
 	DeathHandler()
 	{
-		ACE_DEBUG((LM_INFO, ACE_TEXT("DeathHandler::DeathHandler")));
+		ACE_DEBUG((LM_INFO, ACE_TEXT("DeathHandler::DeathHandler\n")));
 	}
 
 	virtual int handle_exit(ACE_Process* process)
 	{
-		ACE_DEBUG((LM_INFO, ACE_TEXT("DeathHandler::handle_exit")));
+		ACE_DEBUG((LM_INFO, ACE_TEXT("DeathHandler::handle_exit\n")));
 		ACE_DEBUG((LM_INFO, ACE_TEXT("process %d exit with exit code %d\n"), process->getpid(), process->return_value()));
 		if (++count_ == CHILDREN)
 			ACE_Reactor::instance()->end_reactor_event_loop();
@@ -190,25 +190,29 @@ int startup_processMgr(int argc, ACE_TCHAR* argv[])
 
 int startup_processMgr_Reactor(int argc, ACE_TCHAR* argv[])
 {
+	// child process
 	if (argc > 1)
 	{
 		ACE_DEBUG((LM_DEBUG, ACE_TEXT("child process, pid:%d\n"), ACE_OS::getpid()));
-		return 0;    // child process
+		return 0;
 	}
+	else
+	{
+		DeathHandler handler;
+		ACE_Process_Manager pm(10, ACE_Reactor::instance());
+		ACE_Process_Options opt;
+		opt.command_line(ACE_TEXT("%s a"), argv[0]);
 
-	ACE_Process_Manager pm(10, ACE_Reactor::instance());
+		pid_t pids[CHILDREN];
+		pm.spawn_n(CHILDREN, opt, pids);
 
-	DeathHandler handler;
-	ACE_Process_Options op;
-	op.command_line(ACE_TEXT("%s, a"), argv[0]);
+		ACE_DEBUG((LM_DEBUG, ACE_TEXT("%p\n"), ACE_TEXT("spawn_n")));
 
-	pid_t pids[CHILDREN];
-	pm.spawn_n(CHILDREN, op, pids);
+		// register handlers to be called when these processes exit
+		for (int i = 0; i < CHILDREN; i++)
+			pm.register_handler(&handler, pids[i]);
 
-	// register handlers to be called when these processes exit
-	for (int i = 0; i < CHILDREN; i++)
-		pm.register_handler(&handler, pids[i]);
-
-	ACE_Reactor::instance()->run_reactor_event_loop();
-	return 0;
+		ACE_Reactor::instance()->run_reactor_event_loop();
+		return 0;
+	}
 }

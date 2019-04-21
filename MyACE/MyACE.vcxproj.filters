@@ -59,5 +59,14 @@
     <ClInclude Include="process.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="aceThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="aceThreadMgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="aceThreadSig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

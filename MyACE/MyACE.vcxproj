@@ -137,6 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="acceptor_connect_framework.h" />
+    <ClInclude Include="aceThread.h" />
+    <ClInclude Include="aceThreadMgr.h" />
+    <ClInclude Include="aceThreadSig.h" />
     <ClInclude Include="getopt.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="proactor_framework.h" />
